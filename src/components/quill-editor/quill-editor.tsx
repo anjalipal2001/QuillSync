@@ -38,6 +38,11 @@ import { XCircleIcon } from 'lucide-react';
 import { useSocket } from '@/lib/providers/socket-provider';
 import { useSupabaseUser } from '@/lib/providers/supabase-user-provider';
 
+// Existing import statement for Quill CSS
+import 'quill/dist/quill.snow.css';
+
+// Change the import statement for Quill
+import Quill from 'quill';
 interface QuillEditorProps {
   dirDetails: File | Folder | workspace;
   fileId: string;
@@ -161,7 +166,9 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
       wrapper.innerHTML = '';
       const editor = document.createElement('div');
       wrapper.append(editor);
+      // const Quill = (await import('quill')).default;
       const Quill = (await import('quill')).default;
+
       const QuillCursors = (await import('quill-cursors')).default;
       Quill.register('modules/cursors', QuillCursors);
       const q = new Quill(editor, {
@@ -204,6 +211,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
         payload: { fileId, folderId, workspaceId },
       });
       await deleteFile(fileId);
+      console.log("await deleteFile(fileId)",await deleteFile(fileId))
       router.replace(`/dashboard/${workspaceId}`);
     }
     if (dirType === 'folder') {
@@ -395,43 +403,43 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
       const contents = quill.getContents();
       const quillLength = quill.getLength();
       saveTimerRef.current = setTimeout(async () => {
-        // if (contents && quillLength !== 1 && fileId) {
-        //   if (dirType == 'workspace') {
-        //     dispatch({
-        //       type: 'UPDATE_WORKSPACE',
-        //       payload: {
-        //         workspace: { data: JSON.stringify(contents) },
-        //         workspaceId: fileId,
-        //       },
-        //     });
-        //     await updateWorkspace({ data: JSON.stringify(contents) }, fileId);
-        //   }
-        //   if (dirType == 'folder') {
-        //     if (!workspaceId) return;
-        //     dispatch({
-        //       type: 'UPDATE_FOLDER',
-        //       payload: {
-        //         folder: { data: JSON.stringify(contents) },
-        //         workspaceId,
-        //         folderId: fileId,
-        //       },
-        //     });
-        //     await updateFolder({ data: JSON.stringify(contents) }, fileId);
-        //   }
-        //   if (dirType == 'file') {
-        //     if (!workspaceId || !folderId) return;
-        //     dispatch({
-        //       type: 'UPDATE_FILE',
-        //       payload: {
-        //         file: { data: JSON.stringify(contents) },
-        //         workspaceId,
-        //         folderId: folderId,
-        //         fileId,
-        //       },
-        //     });
-        //     await updateFile({ data: JSON.stringify(contents) }, fileId);
-        //   }
-        // }
+        if (contents && quillLength !== 1 && fileId) {
+          if (dirType == 'workspace') {
+            dispatch({
+              type: 'UPDATE_WORKSPACE',
+              payload: {
+                workspace: { data: JSON.stringify(contents) },
+                workspaceId: fileId,
+              },
+            });
+            await updateWorkspace({ data: JSON.stringify(contents) }, fileId);
+          }
+          if (dirType == 'folder') {
+            if (!workspaceId) return;
+            dispatch({
+              type: 'UPDATE_FOLDER',
+              payload: {
+                folder: { data: JSON.stringify(contents) },
+                workspaceId,
+                folderId: fileId,
+              },
+            });
+            await updateFolder({ data: JSON.stringify(contents) }, fileId);
+          }
+          if (dirType == 'file') {
+            if (!workspaceId || !folderId) return;
+            dispatch({
+              type: 'UPDATE_FILE',
+              payload: {
+                file: { data: JSON.stringify(contents) },
+                workspaceId,
+                folderId: folderId,
+                fileId,
+              },
+            });
+            await updateFile({ data: JSON.stringify(contents) }, fileId);
+          }
+        }
         setSaving(false);
       }, 850);
       socket.emit('send-changes', delta, fileId);

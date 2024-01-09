@@ -68,7 +68,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ products }) => {
             <DialogTitle>Upgrade to a Pro Plan</DialogTitle>
           </DialogHeader>
           <DialogDescription>
-            To access Pro features you need to have a paid plan.
+            To access Pro features you need to have a paid plan
           </DialogDescription>
           {products.length
             ? products.map((product) => (
@@ -95,12 +95,14 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ products }) => {
                   ))}
                 </div>
               ))
-            : ''}
-          {/* No Products Available */}
+              : ''}
+            
+         
         </DialogContent>
       )}
     </Dialog>
   );
 };
+
 
 export default SubscriptionModal;
