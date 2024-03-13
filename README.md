@@ -1,6 +1,3 @@
-
-LINK : QuillSync --> https://retail-eolanda-anjali.koyeb.app/
-
 Features in this application.
 🤯 Real-time cursors
 📝 Real-time text selection
